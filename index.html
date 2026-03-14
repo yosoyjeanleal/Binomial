@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Calculadora Binomial - Vanilla JS</title>
+    <style>
+        body { font-family: sans-serif; background: #f4f4f9; padding: 20px; display: flex; justify-content: center; }
+        .card { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 350px; }
+        h2 { color: #333; font-size: 1.2rem; margin-bottom: 1rem; }
+        .field { margin-bottom: 15px; }
+        label { display: block; font-size: 0.9rem; margin-bottom: 5px; color: #666; }
+        input { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        button:hover { background: #0056b3; }
+        #result { margin-top: 20px; padding: 10px; border-radius: 4px; display: none; }
+        .success { background: #e7f3ff; color: #0056b3; border: 1px solid #d0e7ff; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>🔢 Calculadora Binomial</h2>
+    <div class="field">
+        <label>Total de intentos (n)</label>
+        <input type="number" id="n" placeholder="Ej: 10">
+    </div>
+    <div class="field">
+        <label>Éxitos deseados (k)</label>
+        <input type="number" id="k" placeholder="Ej: 5">
+    </div>
+    <div class="field">
+        <label>Prob. de éxito (p) [0 a 1]</label>
+        <input type="number" step="0.01" id="p" placeholder="Ej: 0.5">
+    </div>
+    <button onclick="calcular()">Calcular Probabilidad</button>
+
+    <div id="result" class="success"></div>
+</div>
+
+<script>
+    // Función para calcular el factorial
+    function factorial(num) {
+        if (num === 0 || num === 1) return 1;
+        let res = 1;
+        for (let i = 2; i <= num; i++) res *= i;
+        return res;
+    }
+
+    // Función para calcular el combinatorio (n sobre k)
+    function combinatorio(n, k) {
+        return factorial(n) / (factorial(k) * factorial(n - k));
+    }
+
+    function calcular() {
+        const n = parseInt(document.getElementById('n').value);
+        const k = parseInt(document.getElementById('k').value);
+        const p = parseFloat(document.getElementById('p').value);
+        const q = 1 - p;
+
+        if (k > n) {
+            alert("k no puede ser mayor que n");
+            return;
+        }
+
+        // Fórmula: C(n,k) * p^k * q^(n-k)
+        const prob = combinatorio(n, k) * Math.pow(p, k) * Math.pow(q, n - k);
+        const porcentaje = (prob * 100).toFixed(4);
+
+        const resDiv = document.getElementById('result');
+        resDiv.style.display = 'block';
+        resDiv.innerHTML = `
+            <strong>Resultado P(X=${k}):</strong><br>
+            Decimal: ${prob.toFixed(6)}<br>
+            Porcentaje: <strong>${porcentaje}%</strong>
+        `;
+    }
+</script>
+
+</body>
+</html>
